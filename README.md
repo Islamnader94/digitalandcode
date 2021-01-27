@@ -4,6 +4,7 @@
 
 - ReactJs (FrontEnd)
 - Django 3 (BackEnd)
+- Docker and Docker-compose (DevOps)
 
 
 ## To run the project, start by the server side(BackEnd):
@@ -44,3 +45,24 @@ npm install
 
 npm start
 ```
+
+## To Run the project using Docker:
+```
+docker-compose build
+
+docker-compose up
+```
+
+### After successfully running docker images, run the following necessary django commmands in the docker image:
+```
+docker exec -it backend-digitalcode bash
+```
+
+### Then inside the immage run makemigrations, migrate, createsuperuser:
+```
+root@7ea2e000ac5a:/app/digitalcode# python3 manage.py makemigrations
+root@7ea2e000ac5a:/app/digitalcode# python3 manage.py migrate
+root@7ea2e000ac5a:/app/digitalcode# python3 manage.py createsuperuser
+```
+
+
