@@ -13,7 +13,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
 
-
 class LoginView(APIView):
 
     def post(self, request):
@@ -44,7 +43,6 @@ class LoginView(APIView):
 class CSVTeachers(APIView):
 
     def post(self, request):
-        user = request.user
         csvFile = io.TextIOWrapper(request.FILES['file'].file)
         data = csv.DictReader(csvFile)
         list_of_dict = list(data)
@@ -151,14 +149,3 @@ class TeacherView(APIView):
                 {'error': 'Something terrible went wrong'},
                 safe=False,
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            
-
-
-
-
-
-
-    
-
-
