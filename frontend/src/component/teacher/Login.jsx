@@ -32,7 +32,7 @@ class Login extends Component {
     login = (e) => {
         e.preventDefault();
         let user = {user_name: this.state.username, password: this.state.password};
-        ApiService.VerifyUser(user)
+        ApiService.verifyUser(user)
             .then(res => {
                 if(res.data['authenticated'] === true) {
                     window.sessionStorage.setItem("verify", true)

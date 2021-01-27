@@ -16,7 +16,7 @@ class ApiService {
         return axios.get(Get_Teacher_URL + '/' + teacherId);
     }
 
-    VerifyUser(payload) {
+    verifyUser(payload) {
         return axios.post(""+Verify_User_URL, payload)
     }
 
@@ -27,10 +27,6 @@ class ApiService {
             }
         });
     }
-
-    // editUser(user) {
-    //     return axios.put(USER_API_BASE_URL + '/' + user.id, user);
-    // }
 
 }
 

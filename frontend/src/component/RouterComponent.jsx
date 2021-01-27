@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import ListUserComponent from "./teacher/ListTeachersComponent";
-import AddUserComponent from "./teacher/AddTeachersComponent";
-import EditUserComponent from "./teacher/ViewTeacherComponent";
+import ListTeacherComponent from "./teacher/ListTeachersComponent";
+import AddTeacherComponent from "./teacher/AddTeachersComponent";
+import ViewTeacherComponent from "./teacher/ViewTeacherComponent";
 import Login from "./teacher/Login";
 import React from "react";
 
@@ -10,10 +10,10 @@ const AppRouter = () => {
         <div style={style}>
             <Router>
                     <Switch>
-                        <Route path="/" exact component={ListUserComponent} />
-                        <Route path="/teachers" component={ListUserComponent} />
-                        <Route path="/add-teachers" component={AddUserComponent} />
-                        <Route path="/view-teacher" component={EditUserComponent} />
+                        <Route path="/" exact component={ListTeacherComponent} />
+                        <Route path="/teachers" component={ListTeacherComponent} />
+                        <Route path="/add-teachers" component={AddTeacherComponent} />
+                        <Route path="/view-teacher" component={ViewTeacherComponent} />
                         <Route path="/login" component={Login} />
                     </Switch>
             </Router>
