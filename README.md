@@ -58,7 +58,7 @@ docker-compose up
 docker exec -it backend-digitalcode bash
 ```
 
-### Then inside the immage run makemigrations, migrate, createsuperuser:
+### Then inside the image run makemigrations, migrate, createsuperuser:
 ```
 root@7ea2e000ac5a:/app/digitalcode# python3 manage.py makemigrations
 root@7ea2e000ac5a:/app/digitalcode# python3 manage.py migrate
