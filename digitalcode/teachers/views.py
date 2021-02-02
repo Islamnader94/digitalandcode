@@ -56,7 +56,7 @@ class CSVTeachers(APIView):
                     room_number=row['Room Number'],
                     # subject=Teacher.subject.add(subject[0])
                 )
-                for row in list_of_dict
+                for row in list_of_dict if row['First Name']
             ]
             teacher_data = Teacher.objects.bulk_create(objs)
 
