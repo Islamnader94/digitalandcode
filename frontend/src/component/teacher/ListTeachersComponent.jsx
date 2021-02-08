@@ -10,6 +10,7 @@ import ViewIcon from '@material-ui/icons/Portrait';
 import FaceIcon from '@material-ui/icons/Face';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import Switch from "react-switch";
 
 class ListUserComponent extends Component {
 
@@ -20,12 +21,19 @@ class ListUserComponent extends Component {
             teachers: [],
             filteredData: [],
             message: null,
-            verifyStatus: false
+            checked: false,
+            verifyStatus: false,
+            maxLength: 1
         }
+        this.handleChange = this.handleChange.bind(this);
         this.viewTeacher = this.viewTeacher.bind(this);
         this.searchTeacher = this.searchTeacher.bind(this);
         this.importTeacher = this.importTeacher.bind(this);
         this.reloadTeacherList = this.reloadTeacherList.bind(this);
+    }
+
+    handleChange(checked) {
+        this.setState({ checked });
     }
 
     componentDidMount() {
@@ -37,13 +45,23 @@ class ListUserComponent extends Component {
     }
 
     searchTeacher = (e) => {
-        this.setState({filter: e.target.value})
+        let temp = e.target.value
+        if (this.state.checked === false){
+            if (temp.length <= 1) {
+            this.setState({filter: temp, maxLength: 1})
+            } else {
+                e.preventDefault();
+                return false;
+            }
+        } else {
+            this.setState({filter: temp, maxLength: 25})
+        }
     };
 
     reloadTeacherList() {
         ApiService.fetchTeachers()
             .then((res) => {
-                this.setState({teachers: res.data['teachers']})
+                this.setState({teachers: res.data})
             });
     }
 
@@ -67,15 +85,23 @@ class ListUserComponent extends Component {
     }
 
     render() {
+        let searchLabel = "first letter in last name..."
         const { filter, teachers } = this.state;
         const filteredData = teachers.filter(
             d => {
-                let firstName = d.first_name
                 let lastName = d.last_name
-                if (lastName.toLowerCase().includes(filter.toLowerCase())){
-                    return lastName.toLowerCase().indexOf(filter.toLowerCase()) >= 0
-                } else {
-                    return firstName.toLowerCase().indexOf(filter.toLowerCase()) >= 0
+                let subjects = d.subject
+                if (this.state.checked === false){
+                    searchLabel = "first letter in last name..."
+                    return lastName.toLowerCase().startsWith(filter.toLowerCase())
+                } 
+                else {
+                    searchLabel = "subject..."
+                    return subjects.some((subj) => {
+                        return subj.name.toLowerCase().indexOf(
+                            filter.toLowerCase()) !== -1;
+                        }
+                    )         
                 }
             }).map(d => {
                 return (
@@ -94,6 +120,11 @@ class ListUserComponent extends Component {
                             <TableCell align="right">{d.phone_number}</TableCell>
                             <TableCell align="right">{d.room_number}</TableCell>
                             <TableCell align="right" onClick={() => this.viewTeacher(d.id)}><ViewIcon /></TableCell>
+                            <TableCell align="right" style={subjectList}>
+                            {d.subject.map((item,i) =>
+                                <p key={i}>{item.name}</p>
+                            )}
+                            </TableCell>
 
                         </TableRow>
                 </TableBody>
@@ -117,7 +148,14 @@ class ListUserComponent extends Component {
                     </Button>
                 }
                 <Typography variant="h4" style={style}>List Of Teachers</Typography>
-                <TextField style={search} id="standard-basic" label="Seacrh..." onChange={this.searchTeacher} />
+                <div style={filterArea}>
+                    <span style={switchSpan}>First letter in last name</span>
+                    <label style={style}>
+                        <Switch onChange={this.handleChange} checked={this.state.checked} />
+                    </label>
+                    <span style={switchSpan}>Subject</span>
+                </div>
+                <TextField className="col-6" inputProps={{ maxLength: this.state.maxLength }} style={search} id="standard-basic" label={"Search by" + " " + searchLabel} onChange={this.searchTeacher} /> 
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -127,7 +165,8 @@ class ListUserComponent extends Component {
                             <TableCell align="right">Email</TableCell>
                             <TableCell align="right">Phone Number</TableCell>
                             <TableCell align="right">Room Number</TableCell>
-                            <TableCell align="right">Teacher Profile</TableCell>
+                            <TableCell align="right">Teachers Profile</TableCell>
+                            <TableCell align="right">Subject</TableCell>
                         </TableRow>
                     </TableHead>
                     {filteredData}
@@ -137,6 +176,20 @@ class ListUserComponent extends Component {
         );
     }
 
+}
+
+const filterArea = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+}
+
+const subjectList = {
+    fontSize: 12
+}
+
+const switchSpan = {
+    padding: 20
 }
 
 const search = {

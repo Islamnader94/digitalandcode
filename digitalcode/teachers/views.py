@@ -93,10 +93,28 @@ class TeachersView(APIView):
 
     def get(self, request):
         try:
+            resp = list()
+            response = dict()
+            subject_list = list()
             teachers = Teacher.objects.all()
             serializer = TeacherSerializer(teachers, many=True)
+            teachers_data = serializer.data.copy()
+
+            for item in range(len(serializer.data)):
+                for subj_id in serializer.data[item]['subject']:
+                    subject = Subject.objects.get(id=subj_id)
+                    subj_serializer = SubjectSerializer(subject)
+                    subject_list.append(subj_serializer.data)
+
+                del teachers_data[item]['subject']
+                response[item] = teachers_data[item]
+                response[item].update({'subject': subject_list})
+                subject_list = list()
+
+                resp.append(response[item])
+
             return JsonResponse(
-                {'teachers': serializer.data},
+                resp,
                 safe=False,
                 status=status.HTTP_200_OK)
 
